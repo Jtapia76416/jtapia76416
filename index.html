@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Statistics Calculator</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+    }
+    #container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+    }
+    label {
+        display: block;
+        margin-bottom: 10px;
+    }
+    input[type="text"] {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+    button {
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    button:hover {
+        background-color: #0056b3;
+    }
+    #results {
+        margin-top: 20px;
+    }
+</style>
+</head>
+<body>
+
+<div id="container">
+    <label for="numbers">Enter numbers separated by commas:</label>
+    <input type="text" id="numbers" placeholder="e.g., 1, 2, 3, 4">
+    <button onclick="calculate()">Calculate</button>
+
+    <div id="results">
+        <p>Mean: <span id="mean"></span></p>
+        <p>Median: <span id="median"></span></p>
+        <p>Standard Deviation: <span id="stdDev"></span></p>
+        <p>Interquartile Range (IQR): <span id="iqr"></span></p>
+    </div>
+</div>
+
+<script>
+function calculate() {
+    const numbersInput = document.getElementById('numbers').value;
+    const numbersArray = numbersInput.split(',').map(Number).filter(Boolean);
+
+    const mean = calculateMean(numbersArray);
+    const median = calculateMedian(numbersArray);
+    const stdDev = calculateStandardDeviation(numbersArray);
+    const iqr = calculateInterquartileRange(numbersArray);
+
+    document.getElementById('mean').textContent = mean.toFixed(2);
+    document.getElementById('median').textContent = median.toFixed(2);
+    document.getElementById('stdDev').textContent = stdDev.toFixed(2);
+    document.getElementById('iqr').textContent = iqr.toFixed(2);
+}
+
+function calculateMean(numbers) {
+    const sum = numbers.reduce((acc, val) => acc + val, 0);
+    return sum / numbers.length;
+}
+
+function calculateMedian(numbers) {
+    const sortedNumbers = numbers.sort((a, b) => a - b);
+    const middle = Math.floor(sortedNumbers.length / 2);
+    if (sortedNumbers.length % 2 === 0) {
+        return (sortedNumbers[middle - 1] + sortedNumbers[middle]) / 2;
+    } else {
+        return sortedNumbers[middle];
+    }
+}
+
+function calculateStandardDeviation(numbers) {
+    const mean = calculateMean(numbers);
+    const squaredDifferences = numbers.map(num => Math.pow(num - mean, 2));
+    const variance = squaredDifferences.reduce((acc, val) => acc + val, 0) / numbers.length;
+    return Math.sqrt(variance);
+}
+
+function calculateInterquartileRange(numbers) {
+    const sortedNumbers = numbers.sort((a, b) => a - b);
+    const lowerQuartile = calculateMedian(sortedNumbers.slice(0, Math.floor(sortedNumbers.length / 2)));
+    const upperQuartile = calculateMedian(sortedNumbers.slice(Math.ceil(sortedNumbers.length / 2)));
+    return upperQuartile - lowerQuartile;
+}
+</script>
+
+</body>
+</html>
+g
